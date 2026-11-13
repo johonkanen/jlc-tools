@@ -23,6 +23,8 @@ git submodule update --init
 python3 -I tools/jlc/jlc_search.py AP61102 C5224055 -n 5
 python3 -I tools/jlc/stock_check.py hardware/fab/bom_jlcpcb.csv --boards 10
 KICAD_ROOT=<squashfs-root> tools/jlc/fab_outputs.sh hardware/board.kicad_pcb hardware/fab --skip J1,J2
+# board ordered without silkscreen: leave the silk layers out of the Gerber zip
+KICAD_ROOT=<squashfs-root> tools/jlc/fab_outputs.sh hardware/board.kicad_pcb hardware/fab --no-silk --skip J1,J2
 ```
 
 `KICAD_ROOT` points to an unpacked KiCad AppImage (`--appimage-extract`). Without it, `fab_outputs.sh` uses
