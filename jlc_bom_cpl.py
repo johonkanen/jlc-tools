@@ -15,7 +15,9 @@ JLCPCB's Global Sourcing or consigned parts can be matched to them; they are lis
 CPL rotations are converted to JLCPCB's convention, as kicad-jlcpcb-tools and JLCKicadTools do:
 - bottom-side parts are placed as seen from below, so KiCad's angle a becomes 180 - a;
 - JLC's footprint models for some packages are drawn rotated from KiCad's. ROTATION_CORRECTIONS
-  holds the usual offsets by footprint name, added on top and subtracted on the bottom;
+  holds the usual offsets by footprint name, added on both sides: seen from below a flipped part
+  is the unmirrored footprint at 180 - a, and the model's offset turns it the same way as on top
+  (subtracting it there, as this script did before 2026-11-13, turned 90 / 270 degree packages by 180);
 - a footprint field "JLC Rotation Offset" (degrees) replaces the table offset for that part, for
   fixes found in JLC's placement preview.
 Check the result in JLC's placement preview anyway: packages not in the table keep offset 0.
@@ -57,7 +59,7 @@ def jlc_rotation(fp, kicad_rot):
     else:
         offset = next((o for pat, o in ROTATION_CORRECTIONS if re.search(pat, name)), 0)
     if fp.IsFlipped():
-        rot = 180 - kicad_rot - offset
+        rot = 180 - kicad_rot + offset
     else:
         rot = kicad_rot + offset
     return rot % 360, offset
